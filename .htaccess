@@ -1,0 +1,6 @@
+
+<IfModule !rewrite_module>
+ErrorDocument 403 "The module mod_rewrite is required."
+Deny from all
+</IfModule>
+
