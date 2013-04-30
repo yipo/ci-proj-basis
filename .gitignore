@@ -1,0 +1,5 @@
+
+private/application/cache/*
+private/application/cache/!index.html
+private/application/log/log-*.php
+
