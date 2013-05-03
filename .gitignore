@@ -3,3 +3,7 @@ private/application/cache/*
 private/application/cache/!index.html
 private/application/log/log-*.php
 
+/.htaccess
+/index.php
+private/application/config/database.php
+
