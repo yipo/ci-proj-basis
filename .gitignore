@@ -5,5 +5,7 @@ private/application/log/log-*.php
 
 /.htaccess
 /index.php
+ci-proj-admin/.htaccess
+ci-proj-admin/.htpasswd
 private/application/config/database.php
 
