@@ -2,5 +2,7 @@
 
 require_once('model.inc.php');
 
+$model->get_ready();
+
 require_once('view.inc.php');
 
