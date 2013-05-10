@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<title>ci-proj-admin</title>
+	<title><?=$model->subject?></title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
 </head>
 <body>
 	<div class="navbar navbar-static-top">
 		<div class="navbar-inner">
-			<div class="container"><a href="#" class="brand"></a></div>
+			<div class="container"><a href="#" class="brand"><?=$model->subject?></a></div>
 		</div>
 	</div>
 	<div class="container"></div>

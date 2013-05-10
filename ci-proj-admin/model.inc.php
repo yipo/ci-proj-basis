@@ -1,7 +1,12 @@
 <?php if (!defined('ENTRANCE')) exit;
 
 class Model {
+	public $subject;
 	public $config = array();
+	
+	function __construct($subject) {
+		$this->subject = $subject;
+	}
 	
 	function get_ready() {
 		foreach ($this->config as $obj) $obj->get_ready();
@@ -39,7 +44,7 @@ class Config {
 * Create the instance.
 */
 
-$model = new Model;
+$model = new Model('ci-proj-admin');
 
 $model->config = array(
 	'ar' => new Config('Access Restriction',
