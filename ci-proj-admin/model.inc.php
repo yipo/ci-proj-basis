@@ -11,6 +11,10 @@ class Model {
 	function get_ready() {
 		foreach ($this->config as $obj) $obj->get_ready();
 	}
+	
+	function load() {
+		foreach ($this->config as $obj) $obj->load();
+	}
 }
 
 class Config {
@@ -38,6 +42,21 @@ class Config {
 	
 	function get_ready() {
 		if (!$this->is_ready()) $this->reset();
+	}
+	
+	function load() {
+		$data = file_get_contents($this->target);
+		if ($data===FALSE) exit('fail to open the file.');
+		
+		$rt = preg_match_all("%/\*{{(\w+)}-->}\*/ ('[^']*'|TRUE|FALSE)%",$data,$match);
+		if ($rt===FALSE) exit('some error occurred while matching tags');
+		
+		foreach ($match[1] as $i => $key) {
+			if (array_key_exists($key,$this->field)) {
+				if ($this->field[$key]->type=='password') continue;
+				$this->field[$key]->value = trim($match[2][$i],"'");
+			}
+		}
 	}
 }
 
