@@ -20,6 +20,7 @@ class Config {
 	public $subject;
 	public $target;
 	public $source;
+	public $field = array();
 	
 	function __construct($subject,$target,$source) {
 		$this->subject = $subject;
@@ -37,6 +38,22 @@ class Config {
 	
 	function get_ready() {
 		if (!$this->is_ready()) $this->reset();
+	}
+}
+
+class Field {
+	const VALID_WORD = '^[\w-]*$';
+	const VALID_HOST = '^([A-z][\w-]*\.)*[A-z][\w-]*$|^(\d{1,3}\.){3}\d{1,3}$';
+	
+	public $subject;
+	public $type;
+	public $valid;
+	public $value = NULL;
+	
+	function __construct($subject,$type,$valid = Field::VALID_WORD) {
+		$this->subject = $subject;
+		$this->type    = $type;
+		$this->valid   = $valid;
 	}
 }
 
@@ -63,5 +80,46 @@ $model->config = array(
 		Config::PROJ_PATH.'private/application/config/database.php',
 		Config::TPLT_PATH.'config/database.php'
 	)
+);
+
+$model->config['ar']->field = array(
+	'method' => new Field('Method','radio',array(
+		'local' => 'Local machine only',
+		'auth'  => 'Basic authentication'
+	)),
+	'user'   => new Field('User','text'),
+	'passwd' => new Field('Password','password'),
+	'retype' => new Field('Retype password','password')
+);
+
+$model->config['rb']->field = array(
+	'enable' => new Field('Base URL','radio',array(
+		'false' => 'is relative to the document root.',
+		'true'  => 'set as <code>'.'foo/bar/'.'</code>.'
+	))
+);
+
+$model->config['ev']->field = array(
+	'environment' => new Field('Environment','radio',array(
+		'development' => 'Development',
+		'testing'     => 'Testing',
+		'production'  => 'Production'
+	))
+);
+
+$model->config['db']->field = array(
+	'hostname' => new Field('Host','text',Field::VALID_HOST),
+	'username' => new Field('User','text'),
+	'password' => new Field('Password','password'),
+	'database' => new Field('Database','text'),
+	'dbdriver' => new Field('Driver','select',array(
+		'mysql'   => 'MySQL',
+		'mysqli'  => 'MySQLi',
+		'postgre' => 'PostgreSQL',
+		'odbc'    => 'ODBC',
+		'mssql'   => 'Microsoft SQL',
+		'sqlite'  => 'SQLite',
+		'oci8'    => 'OCI8'
+	))
 );
 
