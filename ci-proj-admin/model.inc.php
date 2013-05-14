@@ -58,6 +58,13 @@ class Config {
 			}
 		}
 	}
+	
+	function validate($data) {
+	}
+	
+	function save($data) {
+		$this->validate($data);
+	}
 }
 
 class Field {

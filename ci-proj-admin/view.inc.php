@@ -25,7 +25,7 @@
 <?php foreach ($model->config as $cfg => $config): ?>
 				<section id="sec-<?=$cfg?>">
 					<div class="page-header"><h4><?=$config->subject?></h4></div>
-					<form class="form-horizontal" action="">
+					<form class="form-horizontal" action="save.php?cfg=<?=$cfg?>" method="post">
 <?php foreach ($config->field as $fld => $field): $label = "fld-{$cfg}-{$fld}"; ?>
 						<div class="control-group">
 							<label class="control-label" for="<?=$label?>"><?=$field->subject?></label>
