@@ -9,11 +9,11 @@ class Model {
 	}
 	
 	function get_ready() {
-		foreach ($this->config as $obj) $obj->get_ready();
+		foreach ($this->config as $config) $config->get_ready();
 	}
 	
 	function load() {
-		foreach ($this->config as $obj) $obj->load();
+		foreach ($this->config as $config) $config->load();
 	}
 }
 
@@ -46,15 +46,15 @@ class Config {
 	
 	function load() {
 		$text = file_get_contents($this->target);
-		if ($text===FALSE) exit('fail to open the file.');
+		if ($text===FALSE) exit('fail to open the file "'.$this->target.'".');
 		
-		$rt = preg_match_all("%/\*{{(\w+)}-->}\*/ ('[^']*'|TRUE|FALSE)%",$text,$match);
-		if ($rt===FALSE) exit('some error occurred while matching tags');
+		$rt = preg_match_all($this->patt_tag(),$text,$match);
+		if ($rt===FALSE) exit('some error occurred while matching tags of the file "'.$this->target.'".');
 		
-		foreach ($match[1] as $i => $key) {
+		foreach ($match[2] as $i => $key) {
 			if (array_key_exists($key,$this->field)) {
 				if ($this->field[$key]->type=='password') continue;
-				$this->field[$key]->value = trim($match[2][$i],"'");
+				$this->field[$key]->value = trim($match[3][$i],"'");
 			}
 		}
 	}
@@ -70,7 +70,7 @@ class Config {
 		$this->validate($data);
 		
 		$text = file_get_contents($this->target);
-		if ($text===FALSE) exit('fail to open the file.');
+		if ($text===FALSE) exit('fail to open the file "'.$this->target.'".');
 		
 		foreach ($this->field as $fld => $field) {
 			$value = $data[$fld];
@@ -80,12 +80,16 @@ class Config {
 				$value = "'{$value}'";
 			}
 			
-			$text = preg_replace("%(/\*{{{$fld}}-->}\*/ )('[^']*'|TRUE|FALSE)%","$1{$value}",$text);
-			if ($text===NULL) exit('some error occurred while filling values in fields.');
+			$text = preg_replace($this->patt_tag($fld),"$1{$value}",$text);
+			if ($text===NULL) exit('some error occurred while filling in fields of the file "'.$this->target.'".');
 		}
 		
 		$rt = file_put_contents($this->target,$text);
-		if ($rt===FALSE) exit('fail to save the file.');
+		if ($rt===FALSE) exit('fail to save the file "'.$this->target.'".');
+	}
+	
+	private function patt_tag($tag = '\w+') {
+		return "%(/\*{{({$tag})}-->}\*/ )('[^']*'|TRUE|FALSE)%";
 	}
 }
 
