@@ -88,8 +88,55 @@ class Config {
 		if ($rt===FALSE) exit('fail to save the file "'.$this->target.'".');
 	}
 	
-	private function patt_tag($tag = '\w+') {
+	protected function patt_tag($tag = '\w+') {
 		return "%(/\*{{({$tag})}-->}\*/ )('[^']*'|TRUE|FALSE)%";
+	}
+
+	protected function patt_hta($tag) {
+		return "%^(# )?({$tag} )(.*)$%m";
+	}
+}
+
+class ConfigAR extends Config {
+	function validate($data) {
+		if (!array_key_exists('method',$data)) exit('lack of the "method" variable.');
+		if ($data['method']!='local') {
+			parent::validate($data);
+			if ($data['passwd']!=$data['retype']) exit('passwords are not match.');
+		}
+	}
+	
+	function save($data) {
+		$this->validate($data);
+		
+		$method = $data['method'];
+		
+		$source['local'] = Config::TPLT_PATH.'admin/local/.htaccess';
+		$source['auth']  = Config::TPLT_PATH.'admin/auth/.htaccess';
+		
+		$this->reset();
+		
+		$text = file_get_contents($source[$method]);
+		if ($text===FALSE) exit('fail to open the file "'.$source[$method].'".');
+		
+		if ($method=='auth') $text = $this->set_auth($text,$data['user'],$data['passwd']);
+		
+		$rt = file_put_contents($this->target,$text,FILE_APPEND);
+		if ($rt===FALSE) exit('fail to save the file "'.$this->target.'".');
+	}
+	
+	private function set_auth($text,$user,$passwd) {
+		$file = '.htpasswd';
+		$rt = file_put_contents($file,$this->gen_sha($user,$passwd));
+		if ($rt===FALSE) exit('fail to save the file "'.$file.'".');
+		
+		$text = preg_replace($this->patt_hta('AuthUserFile'),'$2'.realpath($file),$text);
+		if ($text===NULL) exit('some error occurred while setting the auth user file.');
+		return $text;
+	}
+	
+	private function gen_sha($user,$passwd) {
+		return $user.':{SHA}'.base64_encode(sha1($passwd,TRUE));
 	}
 }
 
@@ -128,7 +175,7 @@ class Field {
 $model = new Model('ci-proj-admin');
 
 $model->config = array(
-	'ar' => new Config('Access Restriction',
+	'ar' => new ConfigAR('Access Restriction',
 		'.htaccess',
 		Config::TPLT_PATH.'admin/.htaccess'
 	),

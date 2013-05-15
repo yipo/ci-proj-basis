@@ -1,4 +1,6 @@
 
+# pseudo-tag: /*{{method}-->}*/ 'auth'
+
 # Reference: Authentication and Authorization
 # http://httpd.apache.org/docs/current/howto/auth.html
 

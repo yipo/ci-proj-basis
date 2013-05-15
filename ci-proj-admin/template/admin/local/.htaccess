@@ -1,4 +1,6 @@
 
+# pseudo-tag: /*{{method}-->}*/ 'local'
+
 # Reference: Apache Module mod_access_compat
 # http://httpd.apache.org/docs/current/mod/mod_access_compat.html
 
