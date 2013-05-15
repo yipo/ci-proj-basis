@@ -45,10 +45,10 @@ class Config {
 	}
 	
 	function load() {
-		$data = file_get_contents($this->target);
-		if ($data===FALSE) exit('fail to open the file.');
+		$text = file_get_contents($this->target);
+		if ($text===FALSE) exit('fail to open the file.');
 		
-		$rt = preg_match_all("%/\*{{(\w+)}-->}\*/ ('[^']*'|TRUE|FALSE)%",$data,$match);
+		$rt = preg_match_all("%/\*{{(\w+)}-->}\*/ ('[^']*'|TRUE|FALSE)%",$text,$match);
 		if ($rt===FALSE) exit('some error occurred while matching tags');
 		
 		foreach ($match[1] as $i => $key) {
@@ -68,6 +68,24 @@ class Config {
 	
 	function save($data) {
 		$this->validate($data);
+		
+		$text = file_get_contents($this->target);
+		if ($text===FALSE) exit('fail to open the file.');
+		
+		foreach ($this->field as $fld => $field) {
+			$value = $data[$fld];
+			if (in_array($value,array('true','false'))) {
+				$value = ($value=='true'?'TRUE':'FALSE');
+			} else {
+				$value = "'{$value}'";
+			}
+			
+			$text = preg_replace("%(/\*{{{$fld}}-->}\*/ )('[^']*'|TRUE|FALSE)%","$1{$value}",$text);
+			if ($text===NULL) exit('some error occurred while filling values in fields.');
+		}
+		
+		$rt = file_put_contents($this->target,$text);
+		if ($rt===FALSE) exit('fail to save the file.');
 	}
 }
 
