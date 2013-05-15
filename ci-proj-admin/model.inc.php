@@ -60,6 +60,10 @@ class Config {
 	}
 	
 	function validate($data) {
+		foreach ($this->field as $fld => $field) {
+			if (!array_key_exists($fld,$data)) exit('lack of the "'.$fld.'" variable.');
+			if (!$field->validate($data[$fld])) exit('invalid value for the "'.$fld.'" variable.');
+		}
 	}
 	
 	function save($data) {
@@ -80,6 +84,18 @@ class Field {
 		$this->subject = $subject;
 		$this->type    = $type;
 		$this->valid   = $valid;
+	}
+	
+	function validate($value) {
+		if (is_string($this->valid)) {
+			$rt = preg_match("%{$this->valid}%",$value);
+			if ($rt===FALSE) exit('some error occurred while validating the "'.$this->subject.'" field.');
+			return ($rt===1);
+		}
+		if (is_array($this->valid)) {
+			return array_key_exists($value,$this->valid);
+		}
+		exit('invalid value of the "valid" variable of the "'.$this->subject.'" field.');
 	}
 }
 
