@@ -140,6 +140,36 @@ class ConfigAR extends Config {
 	}
 }
 
+class ConfigRB extends Config {
+	function load() {
+		$text = file_get_contents($this->target);
+		if ($text===FALSE) exit('fail to open the file "'.$this->target.'".');
+		
+		$rt = preg_match($this->patt_hta('RewriteBase'),$text,$match);
+		if ($rt===FALSE) exit('some error occurred while matching the file "'.$this->target.'".');
+		
+		$this->field['enable']->value = ($match[1]!='# '?'true':'false');
+	}
+	
+	function save($data) {
+		$this->validate($data);
+		
+		$text = file_get_contents($this->target);
+		if ($text===FALSE) exit('fail to open the file "'.$this->target.'".');
+		
+		$replace = ($data['enable']=='true'?'$2'.ConfigRB::base_url():'# $2/my-proj/');
+		$text = preg_replace($this->patt_hta('RewriteBase'),$replace,$text);
+		if ($text===NULL) exit('some error occurred while setting the base url.');
+		
+		$rt = file_put_contents($this->target,$text);
+		if ($rt===FALSE) exit('fail to save the file "'.$this->target.'".');
+	}
+	
+	static function base_url() {
+		return preg_replace('%^(/.*)ci-proj-admin/\w+\.php$%','$1',$_SERVER['SCRIPT_NAME']);
+	}
+}
+
 class Field {
 	const VALID_WORD = '^[\w-]*$';
 	const VALID_HOST = '^([A-z][\w-]*\.)*[A-z][\w-]*$|^(\d{1,3}\.){3}\d{1,3}$';
@@ -179,7 +209,7 @@ $model->config = array(
 		'.htaccess',
 		Config::TPLT_PATH.'admin/.htaccess'
 	),
-	'rb' => new Config('Rewrite Base',
+	'rb' => new ConfigRB('Rewrite Base',
 		Config::PROJ_PATH.'.htaccess',
 		Config::TPLT_PATH.'root/.htaccess'
 	),
@@ -206,7 +236,7 @@ $model->config['ar']->field = array(
 $model->config['rb']->field = array(
 	'enable' => new Field('Base URL','radio',array(
 		'false' => 'is relative to the document root.',
-		'true'  => 'set as <code>'.'foo/bar/'.'</code>.'
+		'true'  => 'set as <code>'.ConfigRB::base_url().'</code>.'
 	))
 );
 
