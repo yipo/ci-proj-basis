@@ -1,5 +1,43 @@
 <?php if (!defined('ENTRANCE')) exit;
 
+/*
+* Utilities
+*/
+
+function my_file_get($file) {
+	$rt = file_get_contents($file);
+	if ($rt===FALSE) exit("fail to open the file \"{$file}\".");
+	return $rt;
+}
+
+function my_file_put($file,$text,$flag = 0) {
+	$rt = file_put_contents($file,$text,$flag);
+	if ($rt===FALSE) exit("fail to save the file \"{$file}\".");
+	return $rt;
+}
+
+function my_match($patt,$sub,$info,&$mat = NULL) {
+	$rt = preg_match($patt,$sub,$mat);
+	if ($rt===FALSE) exit("an error occurred while {$info}.");
+	return $rt;
+}
+
+function my_match_all($patt,$sub,$info,&$mat = NULL) {
+	$rt = preg_match_all($patt,$sub,$mat);
+	if ($rt===FALSE) exit("an error occurred while {$info}.");
+	return $rt;
+}
+
+function my_replace($patt,$rep,$sub,$info) {
+	$rt = preg_replace($patt,$rep,$sub);
+	if ($rt===NULL) exit("an error occurred while {$info}.");
+	return $rt;
+}
+
+/*
+* Class definitions
+*/
+
 class Model {
 	public $subject;
 	public $config = array();
@@ -45,12 +83,8 @@ class Config {
 	}
 	
 	function load() {
-		$text = file_get_contents($this->target);
-		if ($text===FALSE) exit('fail to open the file "'.$this->target.'".');
-		
-		$rt = preg_match_all($this->patt_tag(),$text,$match);
-		if ($rt===FALSE) exit('some error occurred while matching tags of the file "'.$this->target.'".');
-		
+		$text = my_file_get($this->target);
+		my_match_all($this->patt_tag(),$text,"loading the file \"{$this->target}\"",$match);
 		foreach ($match[2] as $i => $key) {
 			if (array_key_exists($key,$this->field)) {
 				if ($this->field[$key]->type=='password') continue;
@@ -61,17 +95,15 @@ class Config {
 	
 	function validate($data) {
 		foreach ($this->field as $fld => $field) {
-			if (!array_key_exists($fld,$data)) exit('lack of the "'.$fld.'" variable.');
-			if (!$field->validate($data[$fld])) exit('invalid value for the "'.$fld.'" variable.');
+			if (!array_key_exists($fld,$data)) exit("lack of the \"{$fld}\" variable.");
+			if (!$field->validate($data[$fld])) exit("invalid value for the \"{$fld}\" variable.");
 		}
 	}
 	
 	function save($data) {
 		$this->validate($data);
 		
-		$text = file_get_contents($this->target);
-		if ($text===FALSE) exit('fail to open the file "'.$this->target.'".');
-		
+		$text = my_file_get($this->target);
 		foreach ($this->field as $fld => $field) {
 			$value = $data[$fld];
 			if (in_array($value,array('true','false'))) {
@@ -79,19 +111,15 @@ class Config {
 			} else {
 				$value = "'{$value}'";
 			}
-			
-			$text = preg_replace($this->patt_tag($fld),"$1{$value}",$text);
-			if ($text===NULL) exit('some error occurred while filling in fields of the file "'.$this->target.'".');
+			$text = my_replace($this->patt_tag($fld),"$1{$value}",$text,"filling the fields of the file \"{$this->target}\"");
 		}
-		
-		$rt = file_put_contents($this->target,$text);
-		if ($rt===FALSE) exit('fail to save the file "'.$this->target.'".');
+		my_file_put($this->target,$text);
 	}
 	
 	protected function patt_tag($tag = '\w+') {
 		return "%(/\*{{({$tag})}-->}\*/ )('[^']*'|TRUE|FALSE)%";
 	}
-
+	
 	protected function patt_hta($tag) {
 		return "%^(# )?({$tag} )(.*)$%m";
 	}
@@ -108,31 +136,21 @@ class ConfigAR extends Config {
 	
 	function save($data) {
 		$this->validate($data);
-		
 		$method = $data['method'];
 		
 		$source['local'] = Config::TPLT_PATH.'admin/local/.htaccess';
 		$source['auth']  = Config::TPLT_PATH.'admin/auth/.htaccess';
 		
 		$this->reset();
-		
-		$text = file_get_contents($source[$method]);
-		if ($text===FALSE) exit('fail to open the file "'.$source[$method].'".');
-		
+		$text = my_file_get($source[$method]);
 		if ($method=='auth') $text = $this->set_auth($text,$data['user'],$data['passwd']);
-		
-		$rt = file_put_contents($this->target,$text,FILE_APPEND);
-		if ($rt===FALSE) exit('fail to save the file "'.$this->target.'".');
+		my_file_put($this->target,$text,FILE_APPEND);
 	}
 	
 	private function set_auth($text,$user,$passwd) {
 		$file = '.htpasswd';
-		$rt = file_put_contents($file,$this->gen_sha($user,$passwd));
-		if ($rt===FALSE) exit('fail to save the file "'.$file.'".');
-		
-		$text = preg_replace($this->patt_hta('AuthUserFile'),'$2'.realpath($file),$text);
-		if ($text===NULL) exit('some error occurred while setting the auth user file.');
-		return $text;
+		my_file_put($file,$this->gen_sha($user,$passwd));
+		return my_replace($this->patt_hta('AuthUserFile'),'$2'.realpath($file),$text,'setting the path to ".htpasswd"');
 	}
 	
 	private function gen_sha($user,$passwd) {
@@ -142,31 +160,22 @@ class ConfigAR extends Config {
 
 class ConfigRB extends Config {
 	function load() {
-		$text = file_get_contents($this->target);
-		if ($text===FALSE) exit('fail to open the file "'.$this->target.'".');
-		
-		$rt = preg_match($this->patt_hta('RewriteBase'),$text,$match);
-		if ($rt===FALSE) exit('some error occurred while matching the file "'.$this->target.'".');
-		
+		$text = my_file_get($this->target);
+		my_match($this->patt_hta('RewriteBase'),$text,"loading the file \"{$this->target}\"",$match);
 		$this->field['enable']->value = ($match[1]!='# '?'true':'false');
 	}
 	
 	function save($data) {
 		$this->validate($data);
 		
-		$text = file_get_contents($this->target);
-		if ($text===FALSE) exit('fail to open the file "'.$this->target.'".');
-		
-		$replace = ($data['enable']=='true'?'$2'.ConfigRB::base_url():'# $2/my-proj/');
-		$text = preg_replace($this->patt_hta('RewriteBase'),$replace,$text);
-		if ($text===NULL) exit('some error occurred while setting the base url.');
-		
-		$rt = file_put_contents($this->target,$text);
-		if ($rt===FALSE) exit('fail to save the file "'.$this->target.'".');
+		$text = my_file_get($this->target);
+		$rep = ($data['enable']=='true'?'$2'.ConfigRB::base_url():'# $2/my-proj/');
+		$text = my_replace($this->patt_hta('RewriteBase'),$rep,$text,'setting the base url');
+		my_file_put($this->target,$text);
 	}
 	
 	static function base_url() {
-		return preg_replace('%^(/.*)ci-proj-admin/\w+\.php$%','$1',$_SERVER['SCRIPT_NAME']);
+		return my_replace('%^(/.*)ci-proj-admin/\w+\.php$%','$1',$_SERVER['SCRIPT_NAME'],'getting the base url');
 	}
 }
 
@@ -187,14 +196,12 @@ class Field {
 	
 	function validate($value) {
 		if (is_string($this->valid)) {
-			$rt = preg_match("%{$this->valid}%",$value);
-			if ($rt===FALSE) exit('some error occurred while validating the "'.$this->subject.'" field.');
-			return ($rt===1);
+			return (1==my_match("%{$this->valid}%",$value,"validating the \"{$this->subject}\" field"));
 		}
 		if (is_array($this->valid)) {
 			return array_key_exists($value,$this->valid);
 		}
-		exit('invalid value of the "valid" variable of the "'.$this->subject.'" field.');
+		exit("invalid value of the \"valid\" variable of the \"{$this->subject}\" field.");
 	}
 }
 
