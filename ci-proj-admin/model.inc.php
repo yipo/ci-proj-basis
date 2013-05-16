@@ -88,7 +88,7 @@ class Config {
 		foreach ($match[2] as $i => $key) {
 			if (array_key_exists($key,$this->field)) {
 				if ($this->field[$key]->type=='password') continue;
-				$this->field[$key]->value = trim($match[3][$i],"'");
+				$this->field[$key]->value = $match[3][$i];
 			}
 		}
 	}
@@ -105,19 +105,13 @@ class Config {
 		
 		$text = my_file_get($this->target);
 		foreach ($this->field as $fld => $field) {
-			$value = $data[$fld];
-			if (in_array($value,array('true','false'))) {
-				$value = ($value=='true'?'TRUE':'FALSE');
-			} else {
-				$value = "'{$value}'";
-			}
-			$text = my_replace($this->patt_tag($fld),"$1{$value}",$text,"filling the fields of the file \"{$this->target}\"");
+			$text = my_replace($this->patt_tag($fld),"$1'{$data[$fld]}'",$text,"filling the fields of the file \"{$this->target}\"");
 		}
 		my_file_put($this->target,$text);
 	}
 	
 	protected function patt_tag($tag = '\w+') {
-		return "%(/\*{{({$tag})}-->}\*/ )('[^']*'|TRUE|FALSE)%";
+		return "%(/\*{{({$tag})}-->}\*/ )'([^']*)'%";
 	}
 	
 	protected function patt_hta($tag) {
