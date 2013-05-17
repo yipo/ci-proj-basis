@@ -25,7 +25,7 @@
 <?php foreach ($model->config as $cfg => $config): ?>
 				<section id="sec-<?=$cfg?>">
 					<div class="page-header"><h4><?=$config->subject?></h4></div>
-					<form class="form-horizontal" action="save.php?cfg=<?=$cfg?>" method="post">
+					<form class="config form-horizontal" action="save.php?cfg=<?=$cfg?>" method="post">
 <?php foreach ($config->field as $fld => $field): $label = "fld-{$cfg}-{$fld}"; ?>
 						<div class="control-group">
 							<label class="control-label" for="<?=$label?>"><?=$field->subject?></label>
@@ -58,5 +58,6 @@
 	</div>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
+	<script src="form.js"></script>
 </body>
 </html>
