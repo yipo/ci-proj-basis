@@ -27,3 +27,20 @@ $('form.config').submit(function() {
 	return false;
 });
 
+function switchElementByRadio(element,radioClass,radioId) {
+	var elmt=$(element).hide();
+	$(radioClass).change(function() {
+		if ($(radioId).prop('checked')) {
+			elmt.fadeIn();
+		} else {
+			elmt.hide();
+		}
+	});
+}
+
+switchElementByRadio(
+	'#sec-ar form div.control-group:not(:first-child)',
+	'.opt-ar-method',
+	'#opt-ar-method-auth'
+);
+

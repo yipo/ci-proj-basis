@@ -35,7 +35,7 @@
 <?php break; case 'radio': ?>
 <?php foreach ($field->valid as $opt => $option): $label = "opt-{$cfg}-{$fld}-{$opt}"; ?>
 								<label class="radio" for="<?=$label?>">
-									<input id="<?=$label?>" type="radio" name="<?=$fld?>" value="<?=$opt?>"<?=($opt==$field->value?' checked':NULL)?>>
+									<input id="<?=$label?>" class="<?="opt-{$cfg}-{$fld}"?>" type="radio" name="<?=$fld?>" value="<?=$opt?>"<?=($opt==$field->value?' checked':NULL)?>>
 									<span><?=$option?></span>
 								</label>
 <?php endforeach; ?>
