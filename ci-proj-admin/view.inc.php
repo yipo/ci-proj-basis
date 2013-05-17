@@ -11,7 +11,7 @@
 <body style="padding-top:40px;">
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
-			<div class="container"><a class="brand" href="#"><?=$model->subject?></a></div>
+			<div class="container"><a class="brand" href="."><?=$model->subject?></a></div>
 		</div>
 	</div>
 	<div class="container">
@@ -45,7 +45,7 @@
 <?php endforeach; ?>
 <?php break; case 'select': ?>
 								<select id="<?=$label?>" name="<?=$fld?>">
-<?php foreach ($field->valid as $opt => $option): $label = "opt-{$cfg}-{$fld}-{$opt}"; ?>
+<?php foreach ($field->valid as $opt => $option): ?>
 									<option value="<?=$opt?>"<?=($opt==$field->value?' selected':NULL)?>><?=$option?></option>
 <?php endforeach; ?>
 								</select>
