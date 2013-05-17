@@ -8,8 +8,8 @@
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
 	<style>@media (max-width:767px) {.affix {position:static;}}</style>
 </head>
-<body>
-	<div class="navbar navbar-static-top">
+<body style="padding-top:40px;">
+	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container"><a class="brand" href="#"><?=$model->subject?></a></div>
 		</div>
