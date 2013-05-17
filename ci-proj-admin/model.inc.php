@@ -219,7 +219,7 @@ $model->config = array(
 		Config::PROJ_PATH.'index.php',
 		Config::TPLT_PATH.'root/index.php'
 	),
-	'db' => new Config('Datebase',
+	'db' => new Config('Database',
 		Config::PROJ_PATH.'private/application/config/database.php',
 		Config::TPLT_PATH.'config/database.php'
 	)
