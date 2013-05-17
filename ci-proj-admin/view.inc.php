@@ -5,6 +5,7 @@
 	<meta charset="UTF-8">
 	<title><?=$model->subject?></title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
+	<style>@media (max-width:767px) {.affix {position:static;}}</style>
 </head>
 <body>
 	<div class="navbar navbar-static-top">
@@ -15,11 +16,13 @@
 	<div class="container">
 		<div class="row">
 			<div class="span4">
-				<ul class="nav nav-tabs nav-stacked" style="margin-top:20px;">
+				<div class="span4" data-spy="affix" style="margin:20px 0;">
+					<ul class="nav nav-tabs nav-stacked">
 <?php foreach ($model->config as $cfg => $config): ?>
-					<li><a href="#sec-<?=$cfg?>"><?=$config->subject?></a></li>
+						<li><a href="#sec-<?=$cfg?>"><?=$config->subject?></a></li>
 <?php endforeach; ?>
-				</ul>
+					</ul>
+				</div>
 			</div>
 			<div class="span8">
 <?php foreach ($model->config as $cfg => $config): ?>
