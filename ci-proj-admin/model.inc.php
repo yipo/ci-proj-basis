@@ -175,6 +175,7 @@ class ConfigRB extends Config {
 
 class Field {
 	const VALID_WORD = '^[\w-]*$';
+	const VALID_WDNE = '^[\w-]+$'; // non-empty
 	const VALID_HOST = '^([A-z][\w-]*\.)*[A-z][\w-]*$|^(\d{1,3}\.){3}\d{1,3}$';
 	
 	public $subject;
@@ -229,9 +230,9 @@ $model->config['ar']->field = array(
 		'local' => 'Local machine only',
 		'auth'  => 'Basic authentication'
 	)),
-	'user'   => new Field('User','text'),
-	'passwd' => new Field('Password','password'),
-	'retype' => new Field('Retype password','password')
+	'user'   => new Field('User','text',Field::VALID_WDNE),
+	'passwd' => new Field('Password','password',Field::VALID_WDNE),
+	'retype' => new Field('Retype password','password',Field::VALID_WDNE)
 );
 
 $model->config['rb']->field = array(
