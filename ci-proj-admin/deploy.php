@@ -6,6 +6,18 @@
 header('Content-Type: text/plain');
 
 /*
+* [Windows] Try to find installed git.
+*/
+if (PHP_OS=='WINNT') {
+	if (shell_exec('git --version')=='') {
+		putenv('PATH='.
+			'C:\Program Files\Git\bin;'.
+			'C:\Program Files (x86)\Git\bin'
+		);
+	}
+}
+
+/*
 * These commands to run:
 */
 $command = array(
