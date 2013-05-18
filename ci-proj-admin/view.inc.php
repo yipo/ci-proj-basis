@@ -61,6 +61,9 @@
 			</div>
 		</div>
 	</div>
+	<footer style="border-top:1px solid hsl(0,0%,90%);padding:20px;background-color:hsl(0,0%,96%);">
+		<div class="container"></div>
+	</footer>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
 	<script src="form.js"></script>
