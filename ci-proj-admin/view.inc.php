@@ -5,26 +5,25 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<title><?=$model->subject?></title>
-	<style>body {padding-top:40px;} /* Must not overwrite the `@media' setting of body. */</style>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
-	<style>@media (max-width:767px) {.affix {position:static;}}</style>
+	<link rel="stylesheet" href="view.css">
 </head>
 <body>
-	<div class="navbar navbar-fixed-top">
+	<header class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container"><a class="brand" href="."><?=$model->subject?></a></div>
 		</div>
-	</div>
+	</header>
 	<div class="container">
 		<div class="row">
 			<div class="span4">
-				<div class="span4" data-spy="affix" style="margin:20px 0;">
+				<nav class="span4" data-spy="affix">
 					<ul class="nav nav-tabs nav-stacked">
 <?php foreach ($model->config as $cfg => $config): ?>
 						<li><a href="#sec-<?=$cfg?>"><?=$config->subject?></a></li>
 <?php endforeach; ?>
 					</ul>
-				</div>
+				</nav>
 			</div>
 			<div class="span8">
 <?php foreach ($model->config as $cfg => $config): ?>
@@ -61,7 +60,7 @@
 			</div>
 		</div>
 	</div>
-	<footer style="border-top:1px solid hsl(0,0%,90%);padding:20px;background-color:hsl(0,0%,96%);">
+	<footer>
 		<div class="container"></div>
 	</footer>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
