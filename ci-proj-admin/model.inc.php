@@ -120,6 +120,8 @@ class Config {
 }
 
 class ConfigAR extends Config {
+	private $htpswd = '.htpasswd';
+	
 	function validate($data) {
 		if (!array_key_exists('method',$data)) exit('lack of the "method" variable.');
 		if ($data['method']!='local') {
@@ -137,14 +139,17 @@ class ConfigAR extends Config {
 		
 		$this->reset();
 		$text = my_file_get($source[$method]);
-		if ($method=='auth') $text = $this->set_auth($text,$data['user'],$data['passwd']);
+		if ($method=='auth') {
+			$text = $this->set_auth($text,$data['user'],$data['passwd']);
+		} else {
+			@unlink($this->htpswd); // `@' because `no such file' is fine.
+		}
 		my_file_put($this->target,$text,FILE_APPEND);
 	}
 	
 	private function set_auth($text,$user,$passwd) {
-		$file = '.htpasswd';
-		my_file_put($file,$this->gen_sha($user,$passwd));
-		return my_replace($this->patt_hta('AuthUserFile'),'$2'.realpath($file),$text,'setting the path to ".htpasswd"');
+		my_file_put($this->htpswd,$this->gen_sha($user,$passwd));
+		return my_replace($this->patt_hta('AuthUserFile'),'$2'.realpath($this->htpswd),$text,'setting the path to ".htpasswd"');
 	}
 	
 	private function gen_sha($user,$passwd) {
