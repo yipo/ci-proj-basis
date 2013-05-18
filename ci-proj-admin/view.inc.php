@@ -5,10 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	<title><?=$model->subject?></title>
+	<style>body {padding-top:40px;} /* Must not overwrite the `@media' setting of body. */</style>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/css/bootstrap-combined.min.css">
 	<style>@media (max-width:767px) {.affix {position:static;}}</style>
 </head>
-<body style="padding-top:40px;">
+<body>
 	<div class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
 			<div class="container"><a class="brand" href="."><?=$model->subject?></a></div>
