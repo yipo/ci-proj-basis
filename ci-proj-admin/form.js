@@ -1,8 +1,8 @@
 
-function bootstrapAlert(msg) {
+function bootstrapAlert(msg,prompt) {
 	return $('<div>').addClass('alert alert-error').append(
 		$('<button>').addClass('close').attr('type','button').attr('data-dismiss','alert').html('&times;'),
-		$('<strong>').text('Error:'),
+		$('<strong>').text(prompt),
 		$('<span>').text(' '+msg)
 	);
 }
@@ -18,7 +18,7 @@ $('form.config').submit(function() {
 		$(this).serializeArray(),
 		function(error) {
 			if (error!='') {
-				$(that).before(bootstrapAlert(error));
+				$(that).before(bootstrapAlert(error,'Error:'));
 			} else {
 				location.reload(true);
 			}
@@ -26,6 +26,14 @@ $('form.config').submit(function() {
 	);
 	return false;
 });
+
+if ($('.opt-ar-method:checked').val()===undefined) {
+	$('#sec-ar form.config').before(
+		bootstrapAlert(
+			'restrict the accessing to this admin panel from others for safety.','Warning:'
+		).hide().delay(1000).fadeIn()
+	);
+}
 
 function switchElementByRadio(element,radioClass,radioId) {
 	var elmt=$(element).hide();
