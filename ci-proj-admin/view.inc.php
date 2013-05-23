@@ -11,7 +11,10 @@
 <body>
 	<header class="navbar navbar-fixed-top">
 		<div class="navbar-inner">
-			<div class="container"><a class="brand" href="."><?=$model->subject?></a></div>
+			<div class="container">
+				<a class="brand" href="."><?=$model->subject?></a>
+				<a class="btn pull-right" href=".."><i class="icon-home"></i></a>
+			</div>
 		</div>
 	</header>
 	<div class="container">
