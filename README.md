@@ -54,7 +54,7 @@ Create the file `post-receive` in the `hooks` folder of the `remote` repo as fol
 
 ```sh
 #!/bin/sh
-cd <path-to-webstie>
+cd <path-to-website>
 unset GIT_DIR
 git pull
 git submodule update --recursive
