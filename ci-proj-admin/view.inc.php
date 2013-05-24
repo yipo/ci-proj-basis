@@ -33,29 +33,29 @@
 				<section id="sec-<?=$cfg?>">
 					<div class="page-header"><h4><?=$config->subject?></h4></div>
 					<form class="config form-horizontal" action="save.php?cfg=<?=$cfg?>" method="post">
-<?php foreach ($config->field as $fld => $field): $label = "fld-{$cfg}-{$fld}"; ?>
+<?php ;   foreach ($config->field as $fld => $field): $label = "fld-{$cfg}-{$fld}"; ?>
 						<div class="control-group">
 							<label class="control-label" for="<?=$label?>"><?=$field->subject?></label>
 							<div class="controls">
-<?php switch ($field->type): default: ?>
+<?php ;   ;   switch ($field->type): default: ?>
 								<input id="<?=$label?>" type="<?=$field->type?>" name="<?=$fld?>" value="<?=$field->value?>" pattern="<?=$field->valid?>">
-<?php break; case 'radio': ?>
-<?php foreach ($field->valid as $opt => $option): $label = "opt-{$cfg}-{$fld}-{$opt}"; ?>
+<?php ;   ;   break; case 'radio': ?>
+<?php ;   ;   ;   foreach ($field->valid as $opt => $option): $label = "opt-{$cfg}-{$fld}-{$opt}"; ?>
 								<label class="radio" for="<?=$label?>">
 									<input id="<?=$label?>" class="<?="opt-{$cfg}-{$fld}"?>" type="radio" name="<?=$fld?>" value="<?=$opt?>"<?=($opt==$field->value?' checked':NULL)?>>
 									<span><?=$option?></span>
 								</label>
-<?php endforeach; ?>
-<?php break; case 'select': ?>
+<?php ;   ;   ;   endforeach; ?>
+<?php ;   ;   break; case 'select': ?>
 								<select id="<?=$label?>" name="<?=$fld?>">
-<?php foreach ($field->valid as $opt => $option): ?>
+<?php ;   ;   ;   foreach ($field->valid as $opt => $option): ?>
 									<option value="<?=$opt?>"<?=($opt==$field->value?' selected':NULL)?>><?=$option?></option>
-<?php endforeach; ?>
+<?php ;   ;   ;   endforeach; ?>
 								</select>
-<?php endswitch; ?>
+<?php ;   ;   endswitch; ?>
 							</div>
 						</div>
-<?php endforeach; ?>
+<?php ;   endforeach; ?>
 						<div class="form-actions"><input class="btn btn-primary" type="submit" value="Save"></div>
 					</form>
 				</section>
