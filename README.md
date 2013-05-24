@@ -57,7 +57,7 @@ Create the file `post-receive` in the `hooks` folder of the `remote` repo as fol
 cd <path-to-website>
 unset GIT_DIR
 git pull
-git submodule update --recursive
+git submodule update --init --recursive
 ```
 
 and make sure the file is executable.

@@ -22,7 +22,7 @@ if (PHP_OS=='WINNT') {
 */
 $command = array(
 	'git pull',
-	'git submodule update --recursive'
+	'git submodule update --init --recursive'
 );
 
 chdir('..'); // Run commands from the toplevel of the working tree.
