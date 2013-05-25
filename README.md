@@ -35,7 +35,8 @@ A project template providing a better way to develop and deploy a website based 
 	git commit -m "Initial commit"
 	```
 
-4. Push this local repo to your remote repo.
+4. Push this local repo to your remote repo.  
+(Replace `<your-remote-repo>` to where your remote repo is.)
 
 	```
 	git remote add origin <your-remote-repo>
@@ -44,13 +45,12 @@ A project template providing a better way to develop and deploy a website based 
 
 ### Deployment
 
-#### The Concept
-
-Read this article: [Using Git for Deployment](http://danbarber.me/using-git-for-deployment/).
+For the concept, read the article [Using Git for Deployment](http://danbarber.me/using-git-for-deployment/).
 
 #### Remote and Website are on the Same Host
 
-Create the file `post-receive` in the `hooks` folder of the `remote` repo as follow:
+Create the file `post-receive` in the `hooks` folder of the `remote` repo as follows:  
+(Replace `<path-to-website>` to the path of the root folder of your website.)
 
 ```sh
 #!/bin/sh
@@ -76,7 +76,7 @@ https://user:password@hostname.com/path/to/website/ci-proj-admin/deploy.php
 
 ### Clone a Repo
 
-Run this command:
+Run this command: (Replace `<your-remote-repo>` to where your remote repo is)
 
 ```
 git clone --recursive <your-remote-repo>
