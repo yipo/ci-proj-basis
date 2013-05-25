@@ -90,7 +90,12 @@ git submodule update --init --recursive
 
 ### Configuration
 
-Link to the page `ci-proj-admin/` of your website.
+The config files that may vary from deployments are extracted from the project. These files (as below) are stored as templates in the folder `ci-proj-admin/template`. Once you link to `ci-proj-admin/` and enter the *admin panel*, these files are copied to their corresponding place and ready for configuring.
+
+- `/.htaccess` (`root/.htaccess`)
+- `/index.php` (`root/index.php`)
+- `ci-proj-admin/.htaccess` (`admin/.htaccess`)
+- `private/application/config/database.php` (`config/database.php`)
 
 ### Private Zone
 
