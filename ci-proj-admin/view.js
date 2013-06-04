@@ -8,6 +8,7 @@ function bootstrapAlert(msg,prompt) {
 }
 
 $('form.config').submit(function() {
+	$(this).find(':submit').prop('disabled',true);
 	var that=this;
 	/*
 	* I know the way of `$.ajax({context:this,...})'.
@@ -17,6 +18,7 @@ $('form.config').submit(function() {
 		$(this).attr('action'),
 		$(this).serializeArray(),
 		function(error) {
+			$(that).find(':submit').prop('disabled',false);
 			if (error!='') {
 				$(that).before(bootstrapAlert(error,'Error:'));
 			} else {
