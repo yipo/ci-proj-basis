@@ -1,5 +1,7 @@
 <?php define('ENTRANCE',__FILE__);
 
+require_once('model.inc.php');
+
 /*
 * Show the outputs of commands as plain text on client's browser.
 */
@@ -31,4 +33,10 @@ foreach ($command as $cmd) {
 	echo "$ {$cmd}\n";
 	echo shell_exec($cmd.' 2>&1'); // Show both stdout and stderr by `2>&1'.
 }
+
+/*
+* Update the config files if there is anything new.
+*/
+chdir(dirname(ENTRANCE));
+$model->update();
 

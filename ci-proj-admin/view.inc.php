@@ -38,7 +38,7 @@
 							<label class="control-label" for="<?=$label?>"><?=$field->subject?></label>
 							<div class="controls">
 <?php ;   ;   switch ($field->type): default: ?>
-								<input id="<?=$label?>" type="<?=$field->type?>" name="<?=$fld?>" value="<?=$field->value?>" pattern="<?=$field->valid?>">
+								<input id="<?=$label?>" type="<?=$field->type?>" name="<?=$fld?>"<?=($field->type=='password'?NULL:" value=\"{$field->value}\"")?> pattern="<?=$field->valid?>">
 <?php ;   ;   break; case 'radio': ?>
 <?php ;   ;   ;   foreach ($field->valid as $opt => $option): $label = "opt-{$cfg}-{$fld}-{$opt}"; ?>
 								<label class="radio" for="<?=$label?>">

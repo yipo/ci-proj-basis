@@ -53,6 +53,10 @@ class Model {
 	function load() {
 		foreach ($this->config as $config) $config->load();
 	}
+	
+	function update() {
+		foreach ($this->config as $config) $config->update();
+	}
 }
 
 class Config {
@@ -87,7 +91,6 @@ class Config {
 		my_match_all($this->patt_tag(),$text,"loading the file \"{$this->target}\"",$match);
 		foreach ($match[2] as $i => $key) {
 			if (array_key_exists($key,$this->field)) {
-				if ($this->field[$key]->type=='password') continue;
 				$this->field[$key]->value = $match[3][$i];
 			}
 		}
@@ -110,6 +113,20 @@ class Config {
 		my_file_put($this->target,$text);
 	}
 	
+	function outdated() {
+		return filemtime($this->target)<filemtime($this->source); // The source is newer than the target.
+	}
+	
+	function update() {
+		$this->get_ready();
+		if ($this->outdated()) {
+			$this->load();
+			$this->reset();
+			foreach ($this->field as $fld => $field) $data[$fld] = $field->value;
+			if (isset($data)) $this->save($data);
+		}
+	}
+	
 	protected function patt_tag($tag = '\w+') {
 		return "%(/\*{{({$tag})}-->}\*/ )'([^']*)'%";
 	}
@@ -120,7 +137,14 @@ class Config {
 }
 
 class ConfigAR extends Config {
+	private $append = array();
 	private $htpswd = '.htpasswd';
+	
+	function __construct($subject,$target,$source,$local,$auth) {
+		parent::__construct($subject,$target,$source);
+		$this->append['local'] = $local;
+		$this->append['auth']  = $auth;
+	}
 	
 	function validate($data) {
 		if (!array_key_exists('method',$data)) exit('lack of the "method" variable.');
@@ -134,17 +158,22 @@ class ConfigAR extends Config {
 		$this->validate($data);
 		$method = $data['method'];
 		
-		$source['local'] = Config::TPLT_PATH.'admin/local/.htaccess';
-		$source['auth']  = Config::TPLT_PATH.'admin/auth/.htaccess';
-		
 		$this->reset();
-		$text = my_file_get($source[$method]);
+		$text = my_file_get($this->append[$method]);
 		if ($method=='auth') {
 			$text = $this->set_auth($text,$data['user'],$data['passwd']);
 		} else {
 			@unlink($this->htpswd); // `@' because `no such file' is fine.
 		}
 		my_file_put($this->target,$text,FILE_APPEND);
+	}
+	
+	function outdated() {
+		return filemtime($this->target)<max(
+			filemtime($this->source),
+			filemtime($this->append['local']),
+			filemtime($this->append['auth'])
+		);
 	}
 	
 	private function set_auth($text,$user,$passwd) {
@@ -214,7 +243,9 @@ $model = new Model('ci-proj-admin');
 $model->config = array(
 	'ar' => new ConfigAR('Access Restriction',
 		'.htaccess',
-		Config::TPLT_PATH.'admin/.htaccess'
+		Config::TPLT_PATH.'admin/.htaccess',
+		Config::TPLT_PATH.'admin/local/.htaccess',
+		Config::TPLT_PATH.'admin/auth/.htaccess'
 	),
 	'rb' => new ConfigRB('Rewrite Base',
 		Config::PROJ_PATH.'.htaccess',
