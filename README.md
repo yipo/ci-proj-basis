@@ -101,3 +101,15 @@ The config files that may vary from deployments are extracted from the project. 
 
 The `private` folder and anything in it are unreachable from the web.
 
+## Thanks for
+
+these libraries:
+
+* [CodeIgniter](http://ellislab.com/codeigniter)
+* [jQuery](http://jquery.com/)
+* [Twitter Bootstrap](http://twitter.github.io/bootstrap/)
+
+## License
+
+This software is licensed under the terms of [the MIT License](https://github.com/YiPo/ci-proj-basis/blob/master/LICENSE.md).
+
