@@ -47,6 +47,30 @@ A project template providing a better way to develop and deploy a website based 
 
 For the concept, read the article [Using Git for Deployment](http://danbarber.me/using-git-for-deployment/).
 
+###### If `remote` is on GitHub
+
+Set the *webhook URL* to the page `ci-proj-admin/deploy.php` of your website, see [Post-Receive Hooks](https://help.github.com/articles/post-receive-hooks) for more information. You should set a password from the admin panel to restrict the accessing to the page. So your *webhook URL* may looks like this:
+
+```
+https://user:password@hostname.com/path/to/website/ci-proj-admin/deploy.php
+```
+
+###### If `remote` and `website` are on Different Hosts
+
+Create the file `post-receive` in the `hooks` folder of the `remote` repo as follows:  
+(Replace `user`, `password` and `path/to/website` to yours.)
+
+```sh
+#!/bin/sh
+curl -k https://user:password@hostname.com/path/to/website/ci-proj-admin/deploy.php
+```
+
+and make sure the file is executable.
+
+```
+chmod +x post-receive
+```
+
 ###### If `remote` and `website` are on the Same Host
 
 Create the file `post-receive` in the `hooks` folder of the `remote` repo as follows:  
@@ -64,14 +88,6 @@ and make sure the file is executable.
 
 ```
 chmod +x post-receive
-```
-
-###### If `remote` is on GitHub
-
-Set the *webhook URL* to the page `ci-proj-admin/deploy.php` of your website, see [Post-Receive Hooks](https://help.github.com/articles/post-receive-hooks) for more information. You should set a password from the admin panel to restrict the accessing to the page. So your *webhook URL* may looks like this:
-
-```
-https://user:password@hostname.com/path/to/website/ci-proj-admin/deploy.php
 ```
 
 ### Clone a Repo
