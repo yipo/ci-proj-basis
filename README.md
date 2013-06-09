@@ -47,7 +47,7 @@ A project template providing a better way to develop and deploy a website based 
 
 For the concept, read the article [Using Git for Deployment](http://danbarber.me/using-git-for-deployment/).
 
-#### Remote and Website are on the Same Host
+###### If `remote` and `website` are on the Same Host
 
 Create the file `post-receive` in the `hooks` folder of the `remote` repo as follows:  
 (Replace `<path-to-website>` to the path of the root folder of your website.)
@@ -66,7 +66,7 @@ and make sure the file is executable.
 chmod +x post-receive
 ```
 
-#### Remote is on GitHub
+###### If `remote` is on GitHub
 
 Set the *webhook URL* to the page `ci-proj-admin/deploy.php` of your website, see [Post-Receive Hooks](https://help.github.com/articles/post-receive-hooks) for more information. You should set a password from the admin panel to restrict the accessing to the page. So your *webhook URL* may looks like this:
 
