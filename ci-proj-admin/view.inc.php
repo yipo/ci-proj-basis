@@ -64,7 +64,10 @@
 		</div>
 	</div>
 	<footer>
-		<div class="container"></div>
+		<div class="container">
+			<span class="pull-right"><b>ci-proj-basis</b> v0.1</span>
+			<span>Report an issue or star us on <a href="https://github.com/YiPo/ci-proj-basis" target="_blank">GitHub</a>.</span>
+		</div>
 	</footer>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 	<script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.1/js/bootstrap.min.js"></script>
