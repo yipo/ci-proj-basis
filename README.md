@@ -43,53 +43,6 @@ A project template providing a better way to develop and deploy a website based 
 	git push -u origin master
 	```
 
-### Deployment
-
-For the concept, read the article [Using Git for Deployment](http://danbarber.me/using-git-for-deployment/).
-
-###### If `remote` is on GitHub
-
-Set the *webhook URL* to the page `ci-proj-admin/deploy.php` of your website, see [Post-Receive Hooks](https://help.github.com/articles/post-receive-hooks) for more information. You should set a password from the admin panel to restrict the accessing to the page. So your *webhook URL* may looks like this:
-
-```
-https://user:password@hostname.com/path/to/website/ci-proj-admin/deploy.php
-```
-
-###### If `remote` and `website` are on Different Hosts
-
-Create the file `post-receive` in the `hooks` folder of the `remote` repo as follows:  
-(Replace `user`, `password` and `path/to/website` to yours.)
-
-```sh
-#!/bin/sh
-curl -k https://user:password@hostname.com/path/to/website/ci-proj-admin/deploy.php
-```
-
-and make sure the file is executable.
-
-```
-chmod +x post-receive
-```
-
-###### If `remote` and `website` are on the Same Host
-
-Create the file `post-receive` in the `hooks` folder of the `remote` repo as follows:  
-(Replace `<path-to-website>` to the path of the root folder of your website.)
-
-```sh
-#!/bin/sh
-cd <path-to-website>
-unset GIT_DIR
-git pull
-git submodule update --init --recursive
-```
-
-and make sure the file is executable.
-
-```
-chmod +x post-receive
-```
-
 ### Clone a Repo
 
 Run this command: (Replace `<your-remote-repo>` to where your remote repo is)
@@ -116,6 +69,37 @@ The config files that may vary from deployments are extracted from the project. 
 ### Private Zone
 
 The `private` folder and anything in it are unreachable from the web.
+
+### Deployment
+
+1. Have your live website ready, see [Clone a Repo](#clone-a-repo) and [Configuration](#configuration).
+
+2. Let the `post-receive` hook of your remote repo access the page `ci-proj-admin/deploy.php` of your website.
+
+###### If the Remote Repo is on Your Own Host
+
+Create the file `post-receive` in the `hooks` folder of the `remote` repo as follows:  
+(Replace `user`, `password` and `path/to/website` to yours.)
+
+```sh
+#!/bin/sh
+curl -k https://user:password@hostname.com/path/to/website/ci-proj-admin/deploy.php
+```
+
+and make sure the file is executable.
+
+```
+chmod +x post-receive
+```
+
+###### If the Remote Repo is on GitHub
+
+Set the *webhook URL* to the page `ci-proj-admin/deploy.php` of your website, see [Post-Receive Hooks](https://help.github.com/articles/post-receive-hooks) for more information. The URL may looks like this:  
+(Replace `user`, `password` and `path/to/website` to yours.)
+
+```
+https://user:password@hostname.com/path/to/website/ci-proj-admin/deploy.php
+```
 
 ## Thanks for
 
