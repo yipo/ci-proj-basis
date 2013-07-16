@@ -1,7 +1,7 @@
 
 private/application/cache/*
 private/application/cache/!index.html
-private/application/log/log-*.php
+private/application/logs/log-*.php
 
 /.htaccess
 /index.php
