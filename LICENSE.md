@@ -13,7 +13,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 # CodeIgniter License Agreement
 
-Copyright (c) 2008 - 2011, EllisLab, Inc.
+Copyright (c) 2008 - 2014, EllisLab, Inc.
 All rights reserved.
 
 This license is a legal agreement between you and EllisLab Inc. for the use of CodeIgniter Software (the "Software"). By obtaining the Software you agree to comply with the terms and conditions of this license.
